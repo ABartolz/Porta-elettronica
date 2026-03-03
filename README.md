@@ -1,5 +1,5 @@
 # PORTA ELETTRONICA
-Questa sezione è dedicata a contenere codice della nostra porta con sensore magnetico per sistemi e reti di 3°A INFO
+Questo documento di testo si occupa di descrivere il nostro processo seguendo vari passaggi.
 
 **1. Componenti**
 
