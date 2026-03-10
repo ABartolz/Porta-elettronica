@@ -26,45 +26,55 @@ Per realizzare questo progetto, io e il mio compare abbiamo bisogno del seguente
 
 **UD SCAN**
  
+/*
+   RFID RC522 - Arduino UNO
+   Lettura UID tag
+*/
+
 #include <SPI.h>
 #include <MFRC522.h>
 
-
+#define SS_PIN 10
 #define RST_PIN 9
-#define SS_PIN  10
 
-
-MFRC522 mfrc522(SS_PIN, RST_PIN);
-
+MFRC522 rfid(SS_PIN, RST_PIN);
 
 void setup() {
+
   Serial.begin(9600);
-  while (!Serial);
-  SPI.begin();
-  mfrc522.PCD_Init();
-  delay(4);
-  mfrc522.PCD_DumpVersionToSerial();
-  Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
+  SPI.begin();          // Avvia SPI
+  rfid.PCD_Init();      // Avvia RC522
+
+  Serial.println("Avvicina una tessera RFID...");
 }
 
-
 void loop() {
-  if ( ! mfrc522.PICC_IsNewCardPresent()) {
+
+  // Controlla se è presente una nuova carta
+  if (!rfid.PICC_IsNewCardPresent()) {
     return;
   }
 
-
-  if ( ! mfrc522.PICC_ReadCardSerial()) {
+  // Legge la carta
+  if (!rfid.PICC_ReadCardSerial()) {
     return;
   }
-  mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
+
+  Serial.print("UID tag: ");
+
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    Serial.print(rfid.uid.uidByte[i], HEX);
+    Serial.print(" ");
+  }
+
+  Serial.println();
+
+  rfid.PICC_HaltA();
 }
 
 **MAIN CODE**
 
-/*Door lock system with Arduino Nano
-   Home Page
-*/
+/* RFID Door Lock System - Arduino UNO */
 
 #include <Servo.h>
 #include <LiquidCrystal_I2C.h>
@@ -73,10 +83,11 @@ void loop() {
 
 #define SS_PIN 10
 #define RST_PIN 9
-#define buzzer 2
-#define servoPin 3
+#define BUZZER 2
+#define SERVO_PIN 3
 
-String UID = "*************";//Enter your card ID
+String UID = "XX XX XX XX";   // inserisci qui l'UID della tua tessera
+
 byte lock = 0;
 
 Servo servo;
@@ -84,87 +95,111 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 MFRC522 rfid(SS_PIN, RST_PIN);
 
 void setup() {
+
   Serial.begin(9600);
-  servo.write(70);
+
+  pinMode(BUZZER, OUTPUT);
+
+  servo.attach(SERVO_PIN);
+  servo.write(70);   // posizione iniziale
+
   lcd.init();
   lcd.backlight();
-  servo.attach(servoPin);
+
   SPI.begin();
   rfid.PCD_Init();
-  pinMode(buzzer, OUTPUT);
+
+  lcd.setCursor(0,0);
+  lcd.print("RFID Door Lock");
+  delay(2000);
+  lcd.clear();
 }
 
 void loop() {
-  lcd.setCursor(4, 0);
+
+  lcd.setCursor(4,0);
   lcd.print("Welcome!");
-  lcd.setCursor(1, 1);
+  lcd.setCursor(1,1);
   lcd.print("Put your card");
 
-  if ( ! rfid.PICC_IsNewCardPresent())
-    return;
-  if ( ! rfid.PICC_ReadCardSerial())
-    return;
+  if (!rfid.PICC_IsNewCardPresent()) return;
+  if (!rfid.PICC_ReadCardSerial()) return;
 
   lcd.clear();
-  lcd.setCursor(0, 0);
+  lcd.setCursor(0,0);
   lcd.print("Scanning");
-  Serial.print("NUID tag is :");
+
   String ID = "";
+
   for (byte i = 0; i < rfid.uid.size; i++) {
+
     lcd.print(".");
     ID.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "));
     ID.concat(String(rfid.uid.uidByte[i], HEX));
+
     delay(300);
   }
+
   ID.toUpperCase();
 
-  if (ID.substring(1) == UID && lock == 0 ) {
-    digitalWrite(buzzer, HIGH);
+  Serial.println(ID);
+
+  // CARD CORRETTA
+  if (ID.substring(1) == UID && lock == 0) {
+
+    digitalWrite(BUZZER, HIGH);
     delay(300);
-    digitalWrite(buzzer, LOW);
+    digitalWrite(BUZZER, LOW);
+
     servo.write(50);
-    delay(100);
+
     lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Locked");
+    lcd.setCursor(0,0);
+    lcd.print("Door Locked");
+
     delay(1500);
     lcd.clear();
+
     lock = 1;
-  } 
-  
-  else if (ID.substring(1) == UID && lock == 1 ) {
-    digitalWrite(buzzer, HIGH);
+  }
+
+  else if (ID.substring(1) == UID && lock == 1) {
+
+    digitalWrite(BUZZER, HIGH);
     delay(300);
-    digitalWrite(buzzer, LOW);
+    digitalWrite(BUZZER, LOW);
+
     servo.write(110);
-    delay(100);
+
     lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Unlocked");
+    lcd.setCursor(0,0);
+    lcd.print("Door Unlocked");
+
     delay(1500);
     lcd.clear();
+
     lock = 0;
-  } 
-  
+  }
+
+  // CARD SBAGLIATA
   else {
+
     lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Wrong card!");
-    digitalWrite(buzzer, HIGH);
-    delay(200);
-    digitalWrite(buzzer, LOW);
-    delay(200);
-    digitalWrite(buzzer, HIGH);
-    delay(200);
-    digitalWrite(buzzer, LOW);
-    delay(200);
-    digitalWrite(buzzer, HIGH);
-    delay(200);
-    digitalWrite(buzzer, LOW);
-    delay(200);
+    lcd.setCursor(0,0);
+    lcd.print("Wrong Card!");
+
+    for(int i=0;i<3;i++){
+      digitalWrite(BUZZER,HIGH);
+      delay(200);
+      digitalWrite(BUZZER,LOW);
+      delay(200);
+    }
+
     delay(1500);
     lcd.clear();
   }
+
+  rfid.PICC_HaltA();
 }
 
 **4. Dimostrazione & Progetto finito**
