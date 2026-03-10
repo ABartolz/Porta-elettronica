@@ -6,7 +6,7 @@ Questo documento di testo si occupa di descrivere il nostro processo seguendo va
 *V = In possesso, X = Da comprare/Acquisire*
 
 Per realizzare questo progetto, io e il mio compare abbiamo bisogno del seguente materiale:
-- 1 Arduino nano **(X)**
+- 1 Arduino UNO **(V)**
 - 1 RFID module **(X)**
 - 1 Breadboard small **(V)**
 - 1 5V Buzzer **(X)**
