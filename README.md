@@ -25,10 +25,6 @@ Per realizzare questo progetto, io e il mio compare abbiamo bisogno del seguente
 **3. Codice (C++)**
 
 **UD SCAN**
-
-/*RFID tag scan code
- * https://srituhobby.com
- */
  
 #include <SPI.h>
 #include <MFRC522.h>
@@ -87,7 +83,6 @@ Servo servo;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-
 void setup() {
   Serial.begin(9600);
   servo.write(70);
@@ -135,7 +130,9 @@ void loop() {
     delay(1500);
     lcd.clear();
     lock = 1;
-  } else if (ID.substring(1) == UID && lock == 1 ) {
+  } 
+  
+  else if (ID.substring(1) == UID && lock == 1 ) {
     digitalWrite(buzzer, HIGH);
     delay(300);
     digitalWrite(buzzer, LOW);
@@ -147,7 +144,9 @@ void loop() {
     delay(1500);
     lcd.clear();
     lock = 0;
-  } else {
+  } 
+  
+  else {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Wrong card!");
