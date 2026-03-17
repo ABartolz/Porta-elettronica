@@ -18,7 +18,7 @@ Per realizzare questo progetto, io e il mio compare abbiamo bisogno del seguente
 - X RFID tags /Bozza/ **(X)**
 - 1 SG90 servo motor **(X)**
 - 1 lucchetto fisico per la porta **(X)**
-- Cartone **(V)**
+- Polistirolo **(X)**
 
 **2. Procedimento**
 
