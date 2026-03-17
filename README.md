@@ -8,7 +8,7 @@ Questo documento di testo si occupa di descrivere il nostro processo seguendo va
 Per realizzare questo progetto, io e il mio compare abbiamo bisogno del seguente materiale:
 - 1 Arduino UNO **(V)**
 - 1 Breadboard piccola **(V)**
-- 1 5V Buzzer **(X)**
+- 1 5V Buzzer **(V)**
 - 2 Cerniere porta **(X)** https://www.amazon.it/Cerniere-Plastica-Rinforzata-40x40-Italy/dp/B0G2YCB2R7
 - 1 Kit RFID (Carte, modulo, lettore) **(X)** https://www.amazon.com/gp/product/B07KGBJ9VG
 - 1 Schermo LCD **(X)** https://www.amazon.com/gp/product/B00HJ6AFW6
