@@ -23,3 +23,5 @@ Per realizzare questo progetto, io e il mio compare abbiamo bisogno del seguente
 https://docs.google.com/presentation/d/1zALAz6wnl__pqaAmbLINI_1rD-7bbG6M1qOnpIwksyI/edit?slide=id.g3dc4a53ef25_0_0#slide=id.g3dc4a53ef25_0_0
 
 **3. Dimostrazione & Progetto finito**
+
+https://drive.google.com/file/d/1SDl2QBOBSWyEBScJEee13VV11LKa3uhV/view?usp=drive_link
